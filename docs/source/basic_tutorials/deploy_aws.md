@@ -19,18 +19,20 @@ docker run --gpus all --shm-size 1g -p 8080:80 -v $volume:/data \
   --model-id "$model"
 ```
 
-4. **Smoke test**:
+4. **Send Chat Completions API request**:
 
 ```bash
-curl 127.0.0.1:8080/generate \
+curl 127.0.0.1:8080/v1/chat/completions \
   -X POST \
   -H 'Content-Type: application/json' \
-  -d '{"inputs":"Hello","parameters":{"max_new_tokens":16}}'
+  -d '{"model":"tgi","messages":[{"role":"user","content":"What is Deep Learning?"}]}'
 ```
 
 ## Deploy on SageMaker (real-time endpoint)
 
-TGI includes a SageMaker compatibility route (`POST /invocations`) and a SageMaker entrypoint (`sagemaker-entrypoint.sh`) that maps SageMaker environment variables to TGI launcher settings.
+TGI includes a SageMaker compatibility route (`POST /invocations`) and a SageMaker entrypoint (`sagemaker-entrypoint.sh`) that maps SageMaker environment variables to TGI launcher settings. The `/invocations` route forwards requests to `/v1/chat/completions` underneath.
+
+> **Warning:** For this flow, use the AWS SageMaker SDK `< 3.0`. For example: `pip install "sagemaker<3"`.
 
 If you are using Hugging Face’s SageMaker integration (recommended), you typically only need to set the model environment variables:
 
@@ -93,6 +95,8 @@ For meaningful benchmarks, measure both:
 
 Use a load generator from *outside* the instance/endpoint VPC when possible (to include network overhead), and run a warmup phase before measuring.
 
+You can use [inference-benchmarker](https://github.com/huggingface/inference-benchmarker) for end-to-end HTTP benchmarking.
+
 Example approach:
 
 1. Warm up with a small number of requests.
@@ -102,4 +106,3 @@ Example approach:
 ### Microbenchmark (model server only)
 
 TGI also provides `text-generation-benchmark` (see the [benchmarking tool README](https://github.com/huggingface/text-generation-inference/tree/main/benchmark#readme)). This tool connects directly to the model server over a Unix socket and bypasses the router, so it’s useful for low-level profiling and batch-size sweeps, but it is **not** an end-to-end benchmark for SageMaker/HTTP.
-

@@ -141,9 +141,9 @@ TGI can be deployed on various cloud providers for scalable and robust text gene
 
 ## Amazon SageMaker
 
-Amazon SageMaker natively supports the Messages API.
+Amazon SageMaker natively supports the Chat Completions API.
 
-For a fuller deployment + benchmarking guide (including EC2), see [Deploying on AWS (EC2 and SageMaker)](../basic_tutorials/deploy_aws).
+For a complete deployment + benchmarking guide (including EC2), see [Deploying on AWS (EC2 and SageMaker)](../basic_tutorials/deploy_aws).
 
 ```python
 import json
