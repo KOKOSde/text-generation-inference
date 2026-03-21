@@ -30,6 +30,12 @@ curl 127.0.0.1:8080/v1/chat/completions \
 
 ## Deploy on SageMaker (real-time endpoint)
 
+```bash
+pip install "sagemaker<3.0.0" --upgrade --quiet
+```
+
+> [!WARNING]
+> [SageMaker Python SDK v3 has been recently released](https://github.com/aws/sagemaker-python-sdk), so unless specified otherwise, all the documentation and tutorials are still using the [SageMaker Python SDK v2](https://github.com/aws/sagemaker-python-sdk/tree/master-v2). We are actively working on updating all the tutorials and examples, but in the meantime make sure to install the SageMaker SDK as `pip install "sagemaker<3.0.0"`.
 TGI includes a SageMaker compatibility route (`POST /invocations`) and a SageMaker entrypoint (`sagemaker-entrypoint.sh`) that maps SageMaker environment variables to TGI launcher settings. The `/invocations` route forwards requests to `/v1/chat/completions` underneath.
 
 > **Warning:** For this flow, use the AWS SageMaker SDK `< 3.0`. For example: `pip install "sagemaker<3"`.
